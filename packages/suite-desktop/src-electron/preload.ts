@@ -23,6 +23,13 @@ const validChannels = [
 
     // custom protocol
     'protocol/open',
+
+    // electrum
+    'electrum/connected',
+    'electrum/received',
+    'electrum/ended',
+    'electrum/error',
+    'electrum/closed',
 ];
 
 contextBridge.exposeInMainWorld('desktopApi', {
@@ -78,4 +85,9 @@ contextBridge.exposeInMainWorld('desktopApi', {
 
     // Udev rules
     installUdevRules: () => ipcRenderer.invoke('udev/install'),
+
+    // Electrum server
+    electrumConnect: (server: string) => ipcRenderer.invoke('electrum/connect', server),
+    electrumClose: () => ipcRenderer.invoke('electrum/close'),
+    electrumSend: (msg: string) => ipcRenderer.send('electrum/send', msg),
 });

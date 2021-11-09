@@ -34,6 +34,8 @@ const log = {
 
 const logger = new Logger(log.level as LogLevel, { ...log });
 
+const electrumBackend = app.commandLine.getSwitchValue('electrum');
+
 // Globals
 global.logger = logger;
 global.resourcesPath = isDev
@@ -80,7 +82,8 @@ const init = async () => {
 
     // Load page
     logger.debug('init', `Load URL (${src})`);
-    mainWindow.loadURL(src);
+    const query = electrumBackend ? `?electrum=${electrumBackend}` : '';
+    mainWindow.loadURL(`${src}${query}`);
 
     const interceptor = createInterceptor();
 
