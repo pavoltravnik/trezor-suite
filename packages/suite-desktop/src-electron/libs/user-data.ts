@@ -4,7 +4,6 @@ import { app } from 'electron';
 export const save = async (directory: string, name: string, content: string) => {
     const dir = `${app.getPath('userData')}${directory}`;
     const file = `${dir}/${name}`;
-
     try {
         try {
             await fs.promises.access(dir, fs.constants.R_OK);
@@ -35,6 +34,17 @@ export const read = async (directory: string, name: string) => {
         return { success: true, payload };
     } catch (error) {
         global.logger.error('user-data', `Read failed: ${error.message}`);
+        return { success: false, error };
+    }
+};
+
+export const clear = async () => {
+    const dir = app.getPath('userData');
+    try {
+        await fs.promises.rm(dir, { recursive: true, force: true });
+        return { success: true };
+    } catch (error) {
+        global.logger.error('user-data', `Remove dir failed: ${error.message}`);
         return { success: false, error };
     }
 };

@@ -363,6 +363,7 @@ const Settings = () => {
                                 removeDatabase();
                                 if (window.desktopApi) {
                                     // Reset the desktop-specific store.
+                                    await window.desktopApi.clearUserData();
                                     window.desktopApi.clearStore();
                                     // relaunch desktop app
                                     window.desktopApi.appRestart();

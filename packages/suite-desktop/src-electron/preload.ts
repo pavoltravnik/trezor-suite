@@ -76,6 +76,9 @@ contextBridge.exposeInMainWorld('desktopApi', {
     // Store
     clearStore: () => ipcRenderer.send('store/clear'),
 
+    // user-data
+    clearUserData: () => ipcRenderer.invoke('user-data/clear'),
+
     // Udev rules
     installUdevRules: () => ipcRenderer.invoke('udev/install'),
 });
