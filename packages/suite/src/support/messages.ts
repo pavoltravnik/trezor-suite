@@ -2805,6 +2805,10 @@ export default defineMessages({
         description: 'Title for the Scan QR modal dialog',
         id: 'TR_SCAN_QR_CODE',
     },
+    TR_PASTE_URI: {
+        defaultMessage: 'Paste URI',
+        id: 'TR_PASTE_URI',
+    },
     TR_SECURITY_HEADING: {
         defaultMessage: 'Your wallet is almost ready',
         description: 'Heading in security page',

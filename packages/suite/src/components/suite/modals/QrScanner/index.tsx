@@ -4,15 +4,22 @@ import styled from 'styled-components';
 import { ExternalLink, Translation, Modal, BundleLoader } from '@suite-components';
 import * as URLS from '@suite-constants/urls';
 import { parseQuery } from '@suite-utils/parseUri';
-import { Icon, colors, P } from '@trezor/components';
+import { Icon, colors, P, Button, Textarea } from '@trezor/components';
 import { UserContextPayload } from '@suite-actions/modalActions';
 
 const QrReader = lazy(() => import(/* webpackChunkName: "react-qr-reader" */ 'react-qr-reader'));
 
-const Description = styled.div`
+const DescriptionWrapper = styled.div`
     display: flex;
-    flex-direction: column;
     align-items: center;
+    justify-content: space-between;
+`;
+
+const Description = styled.div`
+    text-align: left;
+    & * + * {
+        margin-left: 8px;
+    }
 `;
 
 const CameraPlaceholderWrapper = styled.div<{ show: boolean }>`
@@ -57,11 +64,17 @@ const IconWrapper = styled.div`
 const Actions = styled.div`
     display: flex;
     justify-content: center;
+    & > * {
+        min-width: 200px;
+    }
 `;
 
-type Props = {
+const SwitchButton = styled(Button)`
+    margin-left: 8px;
+`;
+
+type Props = Omit<Extract<UserContextPayload, { type: 'qr-reader' }>, 'type'> & {
     onCancel: () => void;
-    decision: Extract<UserContextPayload, { type: 'qr-reader' }>['decision'];
 };
 
 interface State {
@@ -69,9 +82,11 @@ interface State {
     error: JSX.Element | null;
 }
 
-const QrScanner = ({ onCancel, decision }: Props) => {
+const QrScanner = ({ onCancel, decision, allowPaste }: Props) => {
     const [readerLoaded, setReaderLoaded] = useState<State['readerLoaded']>(false);
     const [error, setError] = useState<State['error']>(null);
+    const [isPasteMode, setPasteMode] = useState(false);
+    const [text, setText] = useState('');
 
     const onLoad = () => {
         setReaderLoaded(true);
@@ -116,17 +131,35 @@ const QrScanner = ({ onCancel, decision }: Props) => {
         <Modal
             cancelable
             onCancel={onCancel}
-            heading={<Translation id="TR_SCAN_QR_CODE" />}
+            heading={<Translation id={isPasteMode ? 'TR_PASTE_URI' : 'TR_SCAN_QR_CODE'} />}
             description={
-                <Description>
-                    <Translation id="TR_FOR_EASIER_AND_SAFER_INPUT" />
-                    <ExternalLink size="small" href={URLS.WIKI_QR_CODE}>
-                        <Translation id="TR_LEARN_MORE" />
-                    </ExternalLink>
-                </Description>
+                <DescriptionWrapper>
+                    <Description>
+                        <Translation id="TR_FOR_EASIER_AND_SAFER_INPUT" />
+                        <ExternalLink size="small" href={URLS.WIKI_QR_CODE}>
+                            <Translation id="TR_LEARN_MORE" />
+                        </ExternalLink>
+                    </Description>
+                    {allowPaste && (
+                        <SwitchButton
+                            variant="tertiary"
+                            onClick={() => setPasteMode(value => !value)}
+                        >
+                            <Translation id={isPasteMode ? 'TR_SCAN_QR_CODE' : 'TR_PASTE_URI'} />
+                        </SwitchButton>
+                    )}
+                </DescriptionWrapper>
             }
         >
-            {!readerLoaded && !error && (
+            {isPasteMode && (
+                <Textarea
+                    onChange={e => {
+                        setText(e.target.value);
+                    }}
+                />
+            )}
+
+            {!isPasteMode && !readerLoaded && !error && (
                 <CameraPlaceholderWrapper show>
                     <CameraPlaceholder>
                         <IconWrapper>
@@ -136,7 +169,7 @@ const QrScanner = ({ onCancel, decision }: Props) => {
                     </CameraPlaceholder>
                 </CameraPlaceholderWrapper>
             )}
-            {error && (
+            {!isPasteMode && error && (
                 <CameraPlaceholderWrapper show>
                     <CameraPlaceholder>
                         <Error>
@@ -149,7 +182,7 @@ const QrScanner = ({ onCancel, decision }: Props) => {
                 </CameraPlaceholderWrapper>
             )}
 
-            {!error && (
+            {!isPasteMode && !error && (
                 <CameraPlaceholderWrapper show={readerLoaded}>
                     <Suspense fallback={<BundleLoader />}>
                         <QrReader
@@ -165,6 +198,11 @@ const QrScanner = ({ onCancel, decision }: Props) => {
             )}
 
             <Actions>
+                {isPasteMode && (
+                    <Button isDisabled={!text} onClick={() => handleScan(text)}>
+                        <Translation id="TR_CONFIRM" />
+                    </Button>
+                )}
                 {/* <Button
                         variant="secondary"
                         onClick={() => {
