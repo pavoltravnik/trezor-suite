@@ -20,8 +20,17 @@ import {
     StyledP,
     StyledSoon,
     TranslationModeTrigger,
+    FromMytrezorBanner,
+    BannerWrap,
+    InnerWrap,
+    BannerTitle,
+    BannerDesc,
+    BannerCTA,
+    BannerCTALink,
 } from '@suite-web-landing-components/LandingPage';
 import { switchFavicon } from '../utils/switchFavicon';
+import { refFromMytrezor } from '../utils/refFromMytrezor';
+import { Icon } from '@trezor/components';
 
 const features = [
     {
@@ -53,10 +62,14 @@ const pathToApp = './web';
 
 const Index = () => {
     const [translationMode, setTranslationMode] = useState(false);
+    const [fromMytrezor, setFromMytrezor] = useState(false);
 
     useEffect(() => {
         switchFavicon();
+        setFromMytrezor(refFromMytrezor());
     }, []);
+
+    const isFromMytrezor = fromMytrezor === true;
 
     return (
         <TranslationModeContext.Provider value={translationMode}>
@@ -70,13 +83,23 @@ const Index = () => {
                     <Wrapper>
                         <StyledHeroCta>
                             <StyledHeadline>
-                                <Translation
-                                    id="TR_SUITE_WEB_LANDING_HEADLINE"
-                                    values={{
-                                        em: chunks => <em>{chunks}</em>,
-                                        lineBreak: <br />,
-                                    }}
-                                />
+                                {isFromMytrezor ? (
+                                    <Translation
+                                        id="TR_SUITE_WEB_LANDING_HEADLINE_FROM_MYTREZOR"
+                                        values={{
+                                            em: chunks => <em>{chunks}</em>,
+                                            lineBreak: <br />,
+                                        }}
+                                    />
+                                ) : (
+                                    <Translation
+                                        id="TR_SUITE_WEB_LANDING_HEADLINE"
+                                        values={{
+                                            em: chunks => <em>{chunks}</em>,
+                                            lineBreak: <br />,
+                                        }}
+                                    />
+                                )}
                             </StyledHeadline>
                             <StyledSubheadline>
                                 <Translation id="TR_SUITE_WEB_LANDING_SUB_HEADLINE" />
@@ -85,6 +108,30 @@ const Index = () => {
                                 <Download pathToApp={pathToApp} />
                             </DownloadWrapper>
                         </StyledHeroCta>
+
+                        {isFromMytrezor && (
+                            <FromMytrezorBanner>
+                                <BannerWrap>
+                                    <Icon size={70} icon="THINKING_EMOJI" />
+                                    <InnerWrap>
+                                        <BannerTitle>
+                                            <Translation id="TR_SUITE_WEB_LANDING_BANNER_HEADLINE_FROM_MYTREZOR" />
+                                        </BannerTitle>
+                                        <BannerDesc>
+                                            <Translation id="TR_SUITE_WEB_LANDING_BANNER_DESC_FROM_MYTREZOR" />
+                                        </BannerDesc>
+                                    </InnerWrap>
+                                </BannerWrap>
+                                <BannerCTA variant="tertiary">
+                                    <BannerCTALink href="#">
+                                        <Icon icon="MEDIUM_ICON" />
+                                        <Translation id="TR_SUITE_WEB_LANDING_BANNER_CTA_FROM_MYTREZOR" />
+                                        <Icon icon="ARROW_RIGHT" />
+                                    </BannerCTALink>
+                                </BannerCTA>
+                            </FromMytrezorBanner>
+                        )}
+
                         <FeaturesWrapper>
                             {features.map((item, key) => (
                                 <Feature
@@ -126,6 +173,7 @@ const Index = () => {
                         </StyledCta>
                     </Wrapper>
                 </Layout>
+
                 <TranslationModeTrigger onClick={() => setTranslationMode(prev => !prev)} />
             </IntlProvider>
         </TranslationModeContext.Provider>

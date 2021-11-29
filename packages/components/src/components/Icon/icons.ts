@@ -85,6 +85,7 @@ export const ICONS = {
     BINARY: require('../../images/icons/binary.svg'),
     IMAGE: require('../../images/icons/image.svg'),
     MEDIUM: require('../../images/icons/medium.svg'),
+    MEDIUM_ICON: require('../../images/icons/medium-icon.svg'),
     GAS: require('../../images/icons/gas.svg'),
     TAG: require('../../images/icons/tag.svg'),
     DATA: require('../../images/icons/data.svg'),
@@ -113,4 +114,5 @@ export const ICONS = {
     PENCIL: require('../../images/icons/pencil.svg'),
     PENCIL_LINE: require('../../images/icons/pencil-line.svg'),
     KEY: require('../../images/icons/key.svg'),
+    THINKING_EMOJI: require('../../images/icons/thinking_emoji.svg'),
 };

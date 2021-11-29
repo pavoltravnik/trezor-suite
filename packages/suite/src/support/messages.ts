@@ -6120,6 +6120,24 @@ export default defineMessages({
         id: 'TR_SUITE_WEB_LANDING_HEADLINE',
         defaultMessage: 'Managing crypto just got{lineBreak}<em>safer and easier</em>',
     },
+    TR_SUITE_WEB_LANDING_HEADLINE_FROM_MYTREZOR: {
+        id: 'TR_SUITE_WEB_LANDING_HEADLINE_FROM_MYTREZOR',
+        defaultMessage:
+            'Trezor Suite makes managing{lineBreak}<em>your crypto safer and easier</em>',
+    },
+    TR_SUITE_WEB_LANDING_BANNER_HEADLINE_FROM_MYTREZOR: {
+        id: 'TR_SUITE_WEB_LANDING_BANNER_HEADLINE_FROM_MYTREZOR',
+        defaultMessage: 'Coming from Trezor Wallet?',
+    },
+    TR_SUITE_WEB_LANDING_BANNER_DESC_FROM_MYTREZOR: {
+        id: 'TR_SUITE_WEB_LANDING_BANNER_DESC_FROM_MYTREZOR',
+        defaultMessage:
+            'Trezor Suite offers new features, enhanced security and a more intuitive user interface.',
+    },
+    TR_SUITE_WEB_LANDING_BANNER_CTA_FROM_MYTREZOR: {
+        id: 'TR_SUITE_WEB_LANDING_BANNER_CTA_FROM_MYTREZOR',
+        defaultMessage: 'Read why',
+    },
     TR_SUITE_WEB_LANDING_SUB_HEADLINE: {
         id: 'TR_SUITE_WEB_LANDING_SUB_HEADLINE',
         defaultMessage: 'Take control of your Trezor with our desktop & browser app.',
