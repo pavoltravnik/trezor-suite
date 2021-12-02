@@ -74,6 +74,9 @@ export const getTransactions = async (
             .map(txid => client.request('blockchain.transaction.get', txid, true))
     ).then(txs => arrayToDic(txs, ({ txid }) => txid));
 
+    /* TODO
+     * listunspent is too long for some addresses, but it's probably not a problem
+     * to ignore it as vout[n].spent is not used anywhere anyway
     const unspentOutputs = await Promise.all(
         flatten(
             Object.values(origTxs).map(({ vout }) => vout.map(({ scriptPubKey: { hex } }) => hex))
@@ -95,9 +98,11 @@ export const getTransactions = async (
                 )
         );
 
+    const getSpent = (txid: string, n: number) => !unspentOutputs[txid]?.includes(n);
+    */
+    const getSpent = () => false;
     const getTx = (txid: string) => origTxs[txid] || prevTxs[txid];
     const getVout = (txid: string, vout: number) => getTx(txid).vout[vout];
-    const getSpent = (txid: string, n: number) => !unspentOutputs[txid]?.includes(n);
 
     const currentHeight = client.getInfo()?.block?.height || 0;
 
