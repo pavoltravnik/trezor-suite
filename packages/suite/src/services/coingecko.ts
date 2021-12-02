@@ -256,7 +256,8 @@ const interpolateUsdForTimestamp = (timestamp: number) => {
     if (index < 0) return FIAT_RATES[FIAT_RATES.length - 1][1];
     const [loTs, loRate] = FIAT_RATES[index];
     const [hiTs, hiRate] = FIAT_RATES[index + 1];
-    return (timestamp - loTs) * loRate + (hiTs - timestamp) * hiRate;
+    const ratio = (timestamp - loTs) / (hiTs - loTs);
+    return loRate * ratio + hiRate * (1 - ratio);
 };
 
 /**
@@ -276,6 +277,13 @@ export const getFiatRatesForTimestamps = async (
     const urlEndpoint = `history`;
     if (!coinUrl) return null;
 
+    // TODO temporary hack to not bombarding coingecko with fiat rate requests
+    return {
+        symbol: ticker.symbol,
+        tickers: timestamps.map(ts => ({ ts, rates: { usd: interpolateUsdForTimestamp(ts) } })),
+        ts: new Date().getTime(),
+    };
+
     const url = `${coinUrl}/${urlEndpoint}`;
 
     const promises = timestamps.map(async t => {
@@ -285,7 +293,7 @@ export const getFiatRatesForTimestamps = async (
         const data = await fetchCoinGecko(`${url}?date=${dateParam}`);
         return {
             ts: t,
-            rates: data?.market_data?.current_price || { usd: interpolateUsdForTimestamp(t) },
+            rates: data?.market_data?.current_price,
         };
     });
 
